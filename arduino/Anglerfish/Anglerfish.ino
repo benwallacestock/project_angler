@@ -19,7 +19,7 @@ const int BLUE_PIN  = D4; // GPIO2
 
 // Battery monitoring
 const int BATTERY_PIN = A0;
-const float VOLTAGE_MULTIPLIER = 4.0;
+const float VOLTAGE_MULTIPLIER = 4.144;
 
 // Battery voltage thresholds (typical Li-ion)
 const float BATTERY_MAX = 4.2;
