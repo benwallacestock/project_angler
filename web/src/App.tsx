@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { produce } from 'immer'
 import { ShadeSlider, Wheel, hexToHsva, hsvaToHex } from '@uiw/react-color'
 import type { ColorResult } from '@uiw/color-convert'
@@ -43,7 +43,7 @@ export const App = () => {
         colour: '#ff0000',
       },
       status: {
-        batteryPercentage: 100,
+        batteryPercentage: 32,
         batteryVoltage: 4.2,
         uptime: 3600,
         wifiSignalStrength: 100,
@@ -69,20 +69,6 @@ export const App = () => {
     },
   })
 
-  const prevDeviceState = useRef(deviceState)
-  useEffect(() => {
-    for (const name of Object.keys(deviceState) as Array<DeviceName>) {
-      const prev = prevDeviceState.current[name]
-      const curr = deviceState[name]
-      if (JSON.stringify(prev.lighting) !== JSON.stringify(curr.lighting)) {
-        // Lighting payload changed, publish
-        publishSetLightingPayload(name, curr.lighting)
-      }
-      // You can add more checks if you want to publish on battery/online/selected changes!
-    }
-    prevDeviceState.current = deviceState
-  }, [deviceState, publishSetLightingPayload])
-
   const toggleDeviceSelected = (name: DeviceName) => {
     setDeviceState((prev) =>
       produce(prev, (draft) => {
@@ -97,6 +83,13 @@ export const App = () => {
       .filter(([_, state]) => state.selected)
       .map(([name]) => name as DeviceName),
   )
+
+  const publishLightingPayloadForSelected = () => {
+    for (const name of selected) {
+      const payload = deviceState[name].lighting
+      publishSetLightingPayload(name, payload)
+    }
+  }
 
   // Pass relevant props down like before, depending on selectedMode.
   function renderLightingControlsForMode() {
@@ -119,6 +112,7 @@ export const App = () => {
               }
             }),
           )
+          publishLightingPayloadForSelected()
         }
 
         const handleShadeChange = (newShade: { v: number }) => {
@@ -136,6 +130,7 @@ export const App = () => {
               }
             }),
           )
+          publishLightingPayloadForSelected()
         }
 
         // -- Picker Colour Logic --
@@ -195,6 +190,7 @@ export const App = () => {
                   }
                 }),
               )
+              publishLightingPayloadForSelected()
             }}
           />
         )

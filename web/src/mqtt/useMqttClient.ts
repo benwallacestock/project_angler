@@ -52,6 +52,7 @@ export const useMqttClient = ({
     const handler = (topic: string, message: Buffer) => {
       // Try lighting/status first
       let match = topic.match(lightingRe)
+
       if (match) {
         const device = match[1] as DeviceName
         try {
@@ -59,7 +60,9 @@ export const useMqttClient = ({
           if (isLightingPayload(payload)) {
             onLightingPayloadRef.current?.(device, payload)
           }
-        } catch (err) {}
+        } catch (err) {
+          return
+        }
         return
       }
       // Try generic status (status payload)
@@ -68,6 +71,7 @@ export const useMqttClient = ({
         const device = match[1] as DeviceName
         try {
           const payload = JSON.parse(message.toString())
+          console.log(payload)
           if (isStatusPayload(payload)) {
             onStatusPayloadRef.current?.(device, payload)
           }
@@ -76,7 +80,7 @@ export const useMqttClient = ({
     }
 
     clientRef.current.on('message', handler)
-    clientRef.current.subscribe(`${mqttRootTopic}/+/lighting/status`)
+    clientRef.current.subscribe(`${mqttRootTopic}/#`)
 
     return () => {
       clientRef.current?.off('message', handler)
