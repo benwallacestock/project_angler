@@ -11,7 +11,6 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import './styles.css'
 
-import AiApp from './ai/App.tsx'
 import { App } from '@/App.tsx'
 
 const rootRoute = createRootRoute({
@@ -23,19 +22,13 @@ const rootRoute = createRootRoute({
   ),
 })
 
-const aiRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/ai',
-  component: AiApp,
-})
-
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: App,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, aiRoute])
+const routeTree = rootRoute.addChildren([indexRoute])
 
 const router = createRouter({
   routeTree,
