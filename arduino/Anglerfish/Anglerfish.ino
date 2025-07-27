@@ -13,9 +13,9 @@ String mqtt_topic_battery = String(device_guid) + "/roo/battery";
 String mqtt_topic_set = String(device_guid) + "/roo/set";
 
 // Pin definitions for RGB
-const int RED_PIN   = D1; // GPIO5
-const int GREEN_PIN = D3; // GPIO0
-const int BLUE_PIN  = D4; // GPIO2
+const int RED_PIN   = D2; // GPIO5
+const int GREEN_PIN = D1; // GPIO0
+const int BLUE_PIN  = D3; // GPIO2
 
 // Battery monitoring
 const int BATTERY_PIN = A0;
