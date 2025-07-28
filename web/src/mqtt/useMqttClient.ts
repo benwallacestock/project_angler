@@ -7,7 +7,6 @@ import type { StatusPayload } from '@/mqtt/messageTypes.ts'
 import type { LightingPayload } from '@/mqtt/lightingPayload.ts'
 import { isStatusPayload } from '@/mqtt/messageTypes.ts'
 import { isLightingPayload } from '@/mqtt/lightingPayload.ts'
-import { useDebouncedCallback } from '@/helpers/useDebouncedCallback.ts'
 
 const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt'
 const mqttReconnectPeriodInMilliseconds = 5 * 1000
@@ -36,6 +35,11 @@ export const useMqttClient = ({
     onStatusPayloadRef.current = onStatusPayload
   }, [onStatusPayload])
 
+  const debouncedLightingCallback = useDebouncedLightingCallback(
+    onLightingPayload,
+    200,
+  )
+
   useEffect(() => {
     if (!clientRef.current) {
       clientRef.current = mqtt.connect(brokerUrl, {
@@ -61,7 +65,7 @@ export const useMqttClient = ({
         try {
           const payload = JSON.parse(message.toString())
           if (isLightingPayload(payload)) {
-            onLightingPayloadRef.current?.(device, payload)
+            debouncedLightingCallback(device, payload)
           }
         } catch (err) {
           return
@@ -106,10 +110,34 @@ export const useMqttClient = ({
     [mqttRootTopic, publish],
   )
 
-  const debouncedPublishSetLightingPayload = useDebouncedCallback(
-    publishSetLightingPayload,
-    50,
-  )
+  return { publishSetLightingPayload: publishSetLightingPayload }
+}
 
-  return { publishSetLightingPayload: debouncedPublishSetLightingPayload }
+function useDebouncedLightingCallback(
+  cb: ((device: DeviceName, payload: LightingPayload) => void) | undefined,
+  delay: number,
+) {
+  const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
+  const latestCb = useRef(cb)
+  const latestPayloads = useRef<
+    Record<string, { device: DeviceName; payload: LightingPayload }>
+  >({})
+
+  useEffect(() => {
+    latestCb.current = cb
+  }, [cb])
+
+  // Debounce per device name
+  return useCallback(
+    (device: DeviceName, payload: LightingPayload) => {
+      const key = device
+      latestPayloads.current[key] = { device, payload }
+      clearTimeout(timers.current[key])
+      timers.current[key] = setTimeout(() => {
+        const latest = latestPayloads.current[key]
+        latestCb.current?.(latest.device, latest.payload)
+      }, delay)
+    },
+    [delay],
+  )
 }
