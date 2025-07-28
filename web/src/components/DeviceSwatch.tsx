@@ -1,5 +1,5 @@
 import { twMerge } from 'tailwind-merge'
-import type { DeviceName, DeviceState } from '@/App.tsx'
+import type { DeviceName, DeviceState } from '@/mqtt/device.ts'
 
 interface DeviceSwatchProps {
   name: DeviceName

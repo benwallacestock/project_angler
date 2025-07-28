@@ -1,12 +1,13 @@
-import type { LightingPayload, StatusPayload } from '@/mqtt/messageTypes.ts'
+import type { StatusPayload } from '@/mqtt/messageTypes.ts'
+import type { LightingPayload } from '@/mqtt/lightingPayload.ts'
 
 export const deviceName = ['Ben', 'Roo'] as const
 export type DeviceName = (typeof deviceName)[number]
 
 export type DeviceState = {
   lighting: LightingPayload
-  status: StatusPayload
   selected: boolean
+  status: StatusPayload
 }
 
 export type DeviceStateByName = Record<DeviceName, DeviceState>
