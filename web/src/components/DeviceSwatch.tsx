@@ -40,7 +40,7 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
   const swatch = getSwatchStyle(lighting)
   const online = isDeviceOnline(status)
 
-  // If offline, show dashes for all metrics
+  // Battery
   const batteryPct =
     online && status && typeof status.batteryPercentage === 'number'
       ? Math.round(status.batteryPercentage)
@@ -55,18 +55,33 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
           : batteryPct > 15
             ? 'text-orange-500'
             : 'text-red-500'
+
+  // Voltage
   const voltage =
     online && status && typeof status.batteryVoltage === 'number'
       ? status.batteryVoltage.toFixed(2)
       : null
+
+  // Uptime
   const mins =
     online && status && typeof status.uptime === 'number'
       ? Math.round(status.uptime / 60)
       : null
-  const wifi =
+
+  // WiFi RSSI (dBm, just with colour)
+  const wifiRssi =
     online && status && typeof status.wifiSignalStrength === 'number'
       ? status.wifiSignalStrength
       : null
+
+  const wifiColour =
+    wifiRssi === null
+      ? 'text-gray-400'
+      : wifiRssi >= -60
+        ? 'text-green-500'
+        : wifiRssi >= -75
+          ? 'text-yellow-500'
+          : 'text-red-500'
 
   return (
     <button
@@ -89,6 +104,7 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
           borderColor: selected ? '#3b82f6' : undefined, // blue-500
         }}
       />
+
       {/* Online/Offline Indicator */}
       <div className="absolute left-4 top-4 flex items-center">
         <span
@@ -99,6 +115,7 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
           title={online ? 'Online' : 'Offline'}
         />
       </div>
+
       {/* Name */}
       <span
         className={twMerge(
@@ -108,6 +125,8 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
       >
         {name}
       </span>
+
+      {/* Metrics grid */}
       <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs mt-2 w-[80%] mx-auto">
         <div className="flex items-center justify-center gap-1">
           <span className="text-sm" title="Battery">
@@ -129,13 +148,17 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
           </span>
           <span>{mins !== null ? `${mins} min` : '—'}</span>
         </div>
+        {/* Wi-Fi signal strength in dBm, coloured */}
         <div className="flex items-center justify-center gap-1">
-          <span className="text-sm" title="Signal">
+          <span className="text-sm" title="Wi-Fi signal">
             📶
           </span>
-          <span>{wifi !== null ? `${wifi}%` : '—'}</span>
+          <span className={wifiColour}>
+            {wifiRssi !== null ? `${wifiRssi} dBm` : '—'}
+          </span>
         </div>
       </div>
+
       {/* Info string (colour/rainbow display) */}
       <span className="text-[10px] text-gray-400 mt-2 truncate w-[90%]">
         {swatch.displayString}
