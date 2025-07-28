@@ -43,13 +43,15 @@ export const App = () => {
         }),
       )
     },
-    onStatusPayload: (device, payload) => {
-      setDeviceState((prev) =>
-        produce(prev, (draft) => {
-          draft[device].status = payload
-        }),
-      )
-    },
+    // onStatusPayload: (device, payload) => {
+    //   console.log(payload, deviceState)
+    //   setDeviceState((prev) =>
+    //     produce(prev, (draft) => {
+    //       console.log(draft)
+    //       draft[device].status = payload
+    //     }),
+    //   )
+    // },
   })
 
   const toggleDeviceSelected = (name: DeviceName) => {

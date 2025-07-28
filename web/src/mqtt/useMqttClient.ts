@@ -7,6 +7,7 @@ import type { StatusPayload } from '@/mqtt/messageTypes.ts'
 import type { LightingPayload } from '@/mqtt/lightingPayload.ts'
 import { isStatusPayload } from '@/mqtt/messageTypes.ts'
 import { isLightingPayload } from '@/mqtt/lightingPayload.ts'
+import { useDebouncedCallback } from '@/helpers/useDebouncedCallback.ts'
 
 const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt'
 const mqttReconnectPeriodInMilliseconds = 5 * 1000
@@ -105,5 +106,10 @@ export const useMqttClient = ({
     [mqttRootTopic, publish],
   )
 
-  return { publishSetLightingPayload }
+  const debouncedPublishSetLightingPayload = useDebouncedCallback(
+    publishSetLightingPayload,
+    50,
+  )
+
+  return { publishSetLightingPayload: debouncedPublishSetLightingPayload }
 }

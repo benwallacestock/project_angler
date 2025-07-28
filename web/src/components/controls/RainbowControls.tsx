@@ -13,7 +13,7 @@ export const RainbowControls: React.FC<RainbowControlsProps> = ({
 }) => {
   // You can tweak min/max step as needed
   const MIN = 1
-  const MAX = 10
+  const MAX = 20
 
   return (
     <div className="flex flex-col items-center w-full mt-2">
