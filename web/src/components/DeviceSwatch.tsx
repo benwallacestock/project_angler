@@ -20,7 +20,12 @@ function getSwatchStyle(lighting: DeviceState['lighting']) {
       'linear-gradient(90deg, red, orange, yellow, lime, cyan, blue, violet)'
     return {
       background: grad,
-      displayString: `🌈 Speed: ${lighting.speed}`,
+      displayString: `🌈 Rainbow, Speed ${lighting.speed}`,
+    }
+  } else if (lighting.mode === 'strobe') {
+    return {
+      background: lighting.colour,
+      displayString: `⚡ Strobe: ${lighting.colour}, Speed ${lighting.speed}`,
     }
   }
   return {
@@ -30,7 +35,7 @@ function getSwatchStyle(lighting: DeviceState['lighting']) {
 }
 
 function isDeviceOnline(status: DeviceState['status']): boolean {
-  if (!status || typeof status.timestamp !== 'number') return false
+  if (!status) return false
   const now = Math.floor(Date.now() / 1000)
   return now - status.timestamp < OFFLINE_THRESHOLD_SEC
 }
@@ -42,9 +47,7 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
 
   // Battery
   const batteryPct =
-    online && status && typeof status.batteryPercentage === 'number'
-      ? Math.round(status.batteryPercentage)
-      : null
+    online && status ? Math.round(status.batteryPercentage) : null
   const batteryColour =
     batteryPct === null
       ? 'text-gray-400'
@@ -57,22 +60,13 @@ export const DeviceSwatch = ({ name, state, onClick }: DeviceSwatchProps) => {
             : 'text-red-500'
 
   // Voltage
-  const voltage =
-    online && status && typeof status.batteryVoltage === 'number'
-      ? status.batteryVoltage.toFixed(2)
-      : null
+  const voltage = online && status ? status.batteryVoltage.toFixed(2) : null
 
   // Uptime
-  const mins =
-    online && status && typeof status.uptime === 'number'
-      ? Math.round(status.uptime / 60)
-      : null
+  const mins = online && status ? Math.round(status.uptime / 60) : null
 
   // WiFi RSSI (dBm, just with colour)
-  const wifiRssi =
-    online && status && typeof status.wifiSignalStrength === 'number'
-      ? status.wifiSignalStrength
-      : null
+  const wifiRssi = online && status ? status.wifiSignalStrength : null
 
   const wifiColour =
     wifiRssi === null
