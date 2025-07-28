@@ -2,15 +2,17 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import mqtt from 'mqtt'
 import type { MqttClient } from 'mqtt'
-import type { DeviceName } from '@/mqtt/device.ts'
-import type { StatusPayload } from '@/mqtt/messageTypes.ts'
+import type { StatusPayload } from '@/mqtt/statusPayload.ts'
 import type { LightingPayload } from '@/mqtt/lightingPayload.ts'
-import { isStatusPayload } from '@/mqtt/messageTypes.ts'
+import type { DeviceName } from '@/mqtt/device.ts'
+import { deviceName } from '@/mqtt/device.ts'
+import { isStatusPayload } from '@/mqtt/statusPayload.ts'
 import { isLightingPayload } from '@/mqtt/lightingPayload.ts'
 
 const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt'
 const mqttReconnectPeriodInMilliseconds = 5 * 1000
 const mqttRootTopic = 'a7b3c45d-e1f2-4a5b-8c9d-e0f1a2b3c4d5'
+const knownDevices = new Set(deviceName)
 
 type UseMqttClientProps = {
   onLightingPayload?: (device: DeviceName, payload: LightingPayload) => void
@@ -57,11 +59,16 @@ export const useMqttClient = ({
     const statusRe = new RegExp(`^${mqttRootTopic}/([^/]+)/status$`)
 
     const handler = (topic: string, message: Buffer) => {
+      console.log(topic, message.toString())
       // Try lighting/status first
       let match = topic.match(lightingRe)
 
       if (match) {
         const device = match[1] as DeviceName
+        if (!knownDevices.has(device)) {
+          return
+        }
+
         try {
           const payload = JSON.parse(message.toString())
           if (isLightingPayload(payload)) {
@@ -76,9 +83,13 @@ export const useMqttClient = ({
       match = topic.match(statusRe)
       if (match) {
         const device = match[1] as DeviceName
+        console.log(message.toString())
+        if (!knownDevices.has(device)) {
+          return
+        }
+
         try {
           const payload = JSON.parse(message.toString())
-          console.log(payload)
           if (isStatusPayload(payload)) {
             onStatusPayloadRef.current?.(device, payload)
           }
@@ -102,10 +113,10 @@ export const useMqttClient = ({
   )
 
   const publishSetLightingPayload = useCallback(
-    (deviceName: DeviceName, payload: LightingPayload) => {
-      const topic = `${mqttRootTopic}/${deviceName}/lighting/set`
+    (name: DeviceName, payload: LightingPayload) => {
+      const topic = `${mqttRootTopic}/${name}/lighting/set`
       const message = JSON.stringify(payload)
-      publish(topic, message, true)
+      publish(topic, message, false)
     },
     [mqttRootTopic, publish],
   )

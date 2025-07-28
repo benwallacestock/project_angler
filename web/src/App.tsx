@@ -10,27 +10,18 @@ import { RainbowControls } from '@/components/controls/RainbowControls.tsx'
 import { ColourControls } from '@/components/controls/ColourControls.tsx'
 import { LightingModeSelect } from '@/components/LightingModeSelect.tsx'
 import { defaultLightingPayloadByMode } from '@/mqtt/lightingPayload.ts'
+import { StrobeControls } from '@/components/controls/StrobeControls.tsx'
 
 export const App = () => {
   const [deviceState, setDeviceState] = useState<DeviceStateByName>({
     Ben: {
       lighting: defaultLightingPayloadByMode['colour'],
-      status: {
-        batteryPercentage: 100,
-        batteryVoltage: 4.2,
-        uptime: 3600,
-        wifiSignalStrength: 100,
-      },
+      status: undefined,
       selected: false,
     },
     Roo: {
       lighting: defaultLightingPayloadByMode['colour'],
-      status: {
-        batteryPercentage: 32,
-        batteryVoltage: 4.2,
-        uptime: 3600,
-        wifiSignalStrength: 100,
-      },
+      status: undefined,
       selected: false,
     },
   })
@@ -43,15 +34,13 @@ export const App = () => {
         }),
       )
     },
-    // onStatusPayload: (device, payload) => {
-    //   console.log(payload, deviceState)
-    //   setDeviceState((prev) =>
-    //     produce(prev, (draft) => {
-    //       console.log(draft)
-    //       draft[device].status = payload
-    //     }),
-    //   )
-    // },
+    onStatusPayload: (device, payload) => {
+      setDeviceState((prev) =>
+        produce(prev, (draft) => {
+          draft[device].status = payload
+        }),
+      )
+    },
   })
 
   const toggleDeviceSelected = (name: DeviceName) => {
@@ -123,6 +112,20 @@ export const App = () => {
           />
         )
       }
+      case 'strobe':
+        return (
+          <StrobeControls
+            speed={firstSelectedDeviceState.lighting.speed}
+            colour={firstSelectedDeviceState.lighting.colour}
+            onChange={(newColour, newSpeed) => {
+              updateLightingPayloadForSelectedDevices({
+                mode: 'strobe',
+                colour: newColour,
+                speed: newSpeed,
+              })
+            }}
+          />
+        )
       default: {
         return null
       }

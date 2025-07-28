@@ -44,7 +44,6 @@ export const CustomShadeSliderPointer = ({
     background: color,
   } as CSSProperties
 
-  console.log(color)
   return (
     <div
       className={`${prefixCls}-pointer ${className ?? ''}`}

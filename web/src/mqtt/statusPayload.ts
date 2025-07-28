@@ -3,18 +3,17 @@ export type StatusPayload = {
   batteryVoltage: number
   uptime: number
   wifiSignalStrength: number
+  timestamp: number
 }
 
 export const isStatusPayload = (data: unknown): data is StatusPayload => {
-  if (
+  return (
     typeof data === 'object' &&
     data !== null &&
     typeof (data as any).batteryPercentage === 'number' &&
     typeof (data as any).batteryVoltage === 'number' &&
     typeof (data as any).uptime === 'number' &&
-    typeof (data as any).wifiSignalStrength === 'number'
-  ) {
-    return true
-  }
-  return false
+    typeof (data as any).wifiSignalStrength === 'number' &&
+    typeof (data as any).timestamp === 'number'
+  )
 }

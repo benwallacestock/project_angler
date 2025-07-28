@@ -35,8 +35,8 @@ export const ColourControls = ({
       <Wheel
         color={colour}
         onChange={handleWheelChange}
-        width={window.innerWidth < 400 ? window.innerWidth - 40 : 320}
-        height={window.innerWidth < 400 ? window.innerWidth - 40 : 320}
+        width={300}
+        height={300}
         pointer={CustomColourWheelPointer}
         style={{
           touchAction: 'none',

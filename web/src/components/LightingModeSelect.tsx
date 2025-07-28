@@ -25,6 +25,7 @@ export const LightingModeSelect = ({
       >
         <option value="colour">Colour</option>
         <option value="rainbow">Rainbow</option>
+        <option value="strobe">Strobe</option>
       </select>
     </div>
   )
