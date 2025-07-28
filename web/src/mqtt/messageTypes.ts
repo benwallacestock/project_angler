@@ -18,35 +18,3 @@ export const isStatusPayload = (data: unknown): data is StatusPayload => {
   }
   return false
 }
-
-export type LightingPayload =
-  | {
-      mode: 'colour'
-      colour: string
-    }
-  | {
-      mode: 'rainbow'
-      speed: number
-    }
-
-export const isLightingPayload = (data: unknown): data is LightingPayload => {
-  if (
-    typeof data === 'object' &&
-    data !== null &&
-    'mode' in data &&
-    (data as any).mode === 'colour' &&
-    typeof (data as any).colour === 'string'
-  ) {
-    return true
-  }
-  if (
-    typeof data === 'object' &&
-    data !== null &&
-    'mode' in data &&
-    (data as any).mode === 'rainbow' &&
-    typeof (data as any).speed === 'number'
-  ) {
-    return true
-  }
-  return false
-}
