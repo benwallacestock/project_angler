@@ -8,7 +8,7 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 0, 60000); // UTC, update every 60s
 
 // ---- Device and MQTT topic setup ----
-const char* device_guid = "a7b3c45d-e1f2-4a5b-8c9d-e0f1a2b3c4d5";
+const char* device_guid = "a7b3c45d-e1f2-4a5b-8c9d-e0f1a2b3c4d6";
 const char* device_name = "Roo";
 
 String mqtt_topic_lighting_set =
@@ -204,7 +204,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void reconnect() {
   while (!client.connected()) {
-    String clientId = "ESP8266-" + String(device_guid);
+    String clientId = "ESP8266-" + String(device_name);
     if (client.connect(clientId.c_str())) {
       client.subscribe(mqtt_topic_lighting_set.c_str(), 1);
       Serial.println("Subscribed to: " + mqtt_topic_lighting_set);

@@ -11,7 +11,7 @@ import { isLightingPayload } from '@/mqtt/lightingPayload.ts'
 
 const brokerUrl = 'wss://broker.hivemq.com:8884/mqtt'
 const mqttReconnectPeriodInMilliseconds = 5 * 1000
-const mqttRootTopic = 'a7b3c45d-e1f2-4a5b-8c9d-e0f1a2b3c4d5'
+const mqttRootTopic = 'a7b3c45d-e1f2-4a5b-8c9d-e0f1a2b3c4d6'
 const knownDevices = new Set(deviceName)
 
 type UseMqttClientProps = {
@@ -98,7 +98,8 @@ export const useMqttClient = ({
     }
 
     clientRef.current.on('message', handler)
-    clientRef.current.subscribe(`${mqttRootTopic}/#`)
+    clientRef.current.subscribe(`${mqttRootTopic}/+/lighting/status`)
+    clientRef.current.subscribe(`${mqttRootTopic}/+/status`)
 
     return () => {
       clientRef.current?.off('message', handler)
@@ -114,6 +115,7 @@ export const useMqttClient = ({
 
   const publishSetLightingPayload = useCallback(
     (name: DeviceName, payload: LightingPayload) => {
+      console.log('Publishing', name, payload)
       const topic = `${mqttRootTopic}/${name}/lighting/set`
       const message = JSON.stringify(payload)
       publish(topic, message, false)
