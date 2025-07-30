@@ -12,6 +12,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import './styles.css'
 
 import { App } from '@/App.tsx'
+import { Blog } from '@/Blog.tsx'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -28,7 +29,13 @@ const indexRoute = createRoute({
   component: App,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute])
+const blogRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/blog',
+  component: Blog,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, blogRoute])
 
 const router = createRouter({
   routeTree,
