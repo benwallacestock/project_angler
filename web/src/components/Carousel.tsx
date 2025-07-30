@@ -1,8 +1,8 @@
-// Carousel.tsx
-import { useRef, useState, TouchEvent, MouseEvent } from 'react'
+import React, { useRef, useState } from 'react'
+import type { MouseEvent, TouchEvent } from 'react'
 
 interface CarouselProps {
-  images: string[] // array of imported image urls, e.g. [img1, img2, img3]
+  images: Array<string> // array of imported image urls, e.g. [img1, img2, img3]
   aspectRatio?: string // e.g. 'aspect-[3/2]' or 'aspect-video' (optional)
 }
 
@@ -16,21 +16,12 @@ export const Carousel: React.FC<CarouselProps> = ({
   const SWIPE_THRESHOLD = 40
 
   function handleTouchStart(e: TouchEvent | MouseEvent) {
-    const x =
-      'touches' in e && e.touches[0]
-        ? e.touches[0].clientX
-        : // @ts-expect-error
-          e.clientX
-    touchStartX.current = x
+    touchStartX.current = 'touches' in e ? e.touches[0].clientX : e.clientX
     touchDeltaX.current = 0
   }
   function handleTouchMove(e: TouchEvent | MouseEvent) {
     if (touchStartX.current !== null) {
-      const x =
-        'touches' in e && e.touches[0]
-          ? e.touches[0].clientX
-          : // @ts-expect-error
-            e.clientX
+      const x = 'touches' in e ? e.touches[0].clientX : e.clientX
       touchDeltaX.current = x - touchStartX.current
     }
   }
