@@ -26,9 +26,9 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 // ---- Pins ----
-const int RED_PIN = D2;
-const int GREEN_PIN = D1;
-const int BLUE_PIN = D3;
+const int RED_PIN = D1;
+const int GREEN_PIN = D3;
+const int BLUE_PIN = D2;
 const int BATTERY_PIN = A0;
 const float VOLTAGE_MULTIPLIER = 4.144;
 const float BATTERY_MAX = 4.2;
