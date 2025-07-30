@@ -25,11 +25,9 @@ export const useMqttClient = ({
 }: UseMqttClientProps) => {
   const clientRef = useRef<MqttClient | undefined>(undefined)
   const [clientId] = useState<string>(uuid)
-
   const onLightingPayloadRef =
     useRef<typeof onLightingPayload>(onLightingPayload)
   const onStatusPayloadRef = useRef<typeof onStatusPayload>(onStatusPayload)
-
   useEffect(() => {
     onLightingPayloadRef.current = onLightingPayload
   }, [onLightingPayload])
@@ -39,7 +37,7 @@ export const useMqttClient = ({
 
   const debouncedLightingCallback = useDebouncedLightingCallback(
     onLightingPayload,
-    200,
+    500,
   )
 
   useEffect(() => {
@@ -53,22 +51,18 @@ export const useMqttClient = ({
         },
       })
     }
-
     // --- Handler recognises lighting and status topics ---
     const lightingRe = new RegExp(`^${mqttRootTopic}/([^/]+)/lighting/status$`)
     const statusRe = new RegExp(`^${mqttRootTopic}/([^/]+)/status$`)
-
     const handler = (topic: string, message: Buffer) => {
       console.log(topic, message.toString())
       // Try lighting/status first
       let match = topic.match(lightingRe)
-
       if (match) {
         const device = match[1] as DeviceName
         if (!knownDevices.has(device)) {
           return
         }
-
         try {
           const payload = JSON.parse(message.toString())
           if (isLightingPayload(payload)) {
@@ -87,7 +81,6 @@ export const useMqttClient = ({
         if (!knownDevices.has(device)) {
           return
         }
-
         try {
           const payload = JSON.parse(message.toString())
           if (isStatusPayload(payload)) {
@@ -96,11 +89,8 @@ export const useMqttClient = ({
         } catch (err) {}
       }
     }
-
     clientRef.current.on('message', handler)
-    clientRef.current.subscribe(`${mqttRootTopic}/+/lighting/status`)
-    clientRef.current.subscribe(`${mqttRootTopic}/+/status`)
-
+    clientRef.current.subscribe(`${mqttRootTopic}/#`)
     return () => {
       clientRef.current?.off('message', handler)
     }
@@ -113,17 +103,71 @@ export const useMqttClient = ({
     [],
   )
 
-  const publishSetLightingPayload = useCallback(
-    (name: DeviceName, payload: LightingPayload) => {
-      console.log('Publishing', name, payload)
-      const topic = `${mqttRootTopic}/${name}/lighting/set`
-      const message = JSON.stringify(payload)
-      publish(topic, message, false)
-    },
-    [mqttRootTopic, publish],
+  // --- Throttled publisher implementation ---
+  const publishSetLightingPayload = useThrottledLightingPublisher(
+    publish,
+    20, // 100ms throttle interval
   )
 
-  return { publishSetLightingPayload: publishSetLightingPayload }
+  return { publishSetLightingPayload }
+}
+
+// --- Throttle implementation: sends at most once per interval, always with latest ---
+export const useThrottledLightingPublisher = (
+  publish: (topic: string, message: string, retain: boolean) => void,
+  interval = 100,
+) => {
+  const lastPublishRef = useRef(0)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const latestArgsRef = useRef<{
+    n: DeviceName
+    p: LightingPayload
+  } | null>(null)
+
+  const throttledPublish = useCallback(
+    (name: DeviceName, payload: LightingPayload) => {
+      latestArgsRef.current = { n: name, p: payload }
+      const now = Date.now()
+
+      const invokePublish = () => {
+        if (!latestArgsRef.current) return
+        const { n, p } = latestArgsRef.current
+        const topic = `${mqttRootTopic}/${n}/lighting/set`
+        const message = JSON.stringify(p)
+        publish(topic, message, false)
+        lastPublishRef.current = Date.now()
+        latestArgsRef.current = null
+      }
+
+      // If enough time has passed since the last publish, send immediately
+      if (now - lastPublishRef.current >= interval) {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current)
+          timeoutRef.current = null
+        }
+        invokePublish()
+      } else {
+        // Otherwise, schedule the next send for after the interval
+        if (!timeoutRef.current) {
+          const timeLeft = interval - (now - lastPublishRef.current)
+          timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = null
+            invokePublish()
+          }, timeLeft)
+        }
+      }
+    },
+    [mqttRootTopic, publish, interval],
+  )
+
+  // Clean up on unmount (optional)
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  return throttledPublish
 }
 
 function useDebouncedLightingCallback(
@@ -135,11 +179,9 @@ function useDebouncedLightingCallback(
   const latestPayloads = useRef<
     Record<string, { device: DeviceName; payload: LightingPayload }>
   >({})
-
   useEffect(() => {
     latestCb.current = cb
   }, [cb])
-
   // Debounce per device name
   return useCallback(
     (device: DeviceName, payload: LightingPayload) => {
