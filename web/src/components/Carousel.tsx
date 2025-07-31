@@ -1,9 +1,14 @@
 import React, { useRef, useState } from 'react'
 import type { MouseEvent, TouchEvent } from 'react'
 
+interface CarouselImage {
+  src: string
+  caption: string
+}
+
 interface CarouselProps {
-  images: Array<string> // array of imported image urls, e.g. [img1, img2, img3]
-  aspectRatio?: string // e.g. 'aspect-[3/2]' or 'aspect-video' (optional)
+  images: Array<CarouselImage> // [{ src, caption }...]
+  aspectRatio?: string // e.g. 'aspect-[3/2]' or 'aspect-video'
 }
 
 export const Carousel: React.FC<CarouselProps> = ({
@@ -15,17 +20,19 @@ export const Carousel: React.FC<CarouselProps> = ({
   const touchDeltaX = useRef(0)
   const SWIPE_THRESHOLD = 40
 
-  function handleTouchStart(e: TouchEvent | MouseEvent) {
+  const handleTouchStart = (e: TouchEvent | MouseEvent) => {
     touchStartX.current = 'touches' in e ? e.touches[0].clientX : e.clientX
     touchDeltaX.current = 0
   }
-  function handleTouchMove(e: TouchEvent | MouseEvent) {
+
+  const handleTouchMove = (e: TouchEvent | MouseEvent) => {
     if (touchStartX.current !== null) {
       const x = 'touches' in e ? e.touches[0].clientX : e.clientX
       touchDeltaX.current = x - touchStartX.current
     }
   }
-  function handleTouchEnd() {
+
+  const handleTouchEnd = () => {
     if (Math.abs(touchDeltaX.current) > SWIPE_THRESHOLD) {
       if (touchDeltaX.current < 0) {
         setIndex((index + 1) % images.length)
@@ -38,6 +45,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   }
 
   if (!images.length) return null
+
   return (
     <div className="w-full flex flex-col items-center">
       <div
@@ -58,8 +66,8 @@ export const Carousel: React.FC<CarouselProps> = ({
         style={{ userSelect: 'none' }}
       >
         <img
-          src={images[index]}
-          alt=""
+          src={images[index].src}
+          alt={images[index].caption || ''}
           className="w-full h-full object-cover object-center select-none pointer-events-none"
           draggable={false}
         />
@@ -80,12 +88,16 @@ export const Carousel: React.FC<CarouselProps> = ({
           ›
         </button>
       </div>
+      {/* Caption */}
+      <div className="mt-2 text-sm text-gray-800 text-center w-full max-w-md">
+        {images[index].caption}
+      </div>
       <div className="flex gap-2 mt-3">
         {images.map((_, i) => (
           <button
             key={i}
             onClick={() => setIndex(i)}
-            className={`w-2 h-2 rounded-full transition-colors duration-200 ${i === index ? 'bg-blue-600' : 'bg-gray-300'}`}
+            className={`w-2 h-2 rounded-full transition-colours duration-200 ${i === index ? 'bg-blue-600' : 'bg-gray-300'}`}
             aria-label={`Go to slide ${i + 1}`}
             type="button"
           />

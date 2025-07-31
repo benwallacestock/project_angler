@@ -1,111 +1,243 @@
 import { Carousel } from '@/components/Carousel.tsx'
 import deskImage from '@/assets/desk.jpeg'
 import breadboardImage from '@/assets/breadboard.jpeg'
+import glowImage from '@/assets/glow.gif'
 import failedCircuitImage from '@/assets/failed_circuit.jpeg'
 import printingImage from '@/assets/printing.jpeg'
 import circuitsImage from '@/assets/circuits.jpeg'
 import headbandImage from '@/assets/headband.jpeg'
+import headband2Image from '@/assets/headband2.jpeg'
+import benImage from '@/assets/ben.jpeg'
+import aiImage from '@/assets/ai.jpeg'
 
 export const Blog = () => {
   return (
     <div className="max-w-xl mx-auto py-8 px-4 select-text">
-      <h2 className="text-xl font-bold mb-4 text-blue-900">
-        Project Angler: Development Log
-      </h2>
-      <Carousel
-        images={[
-          deskImage,
-          breadboardImage,
-          failedCircuitImage,
-          printingImage,
-          circuitsImage,
-          headbandImage,
-        ]}
-      />
       <article className="mt-6 prose prose-blue">
-        <h1 className="text-2xl font-extrabold tracking-tight text-blue-900">
-          🌊 In The Beginning... 🌊
-        </h1>
+        <h1 className="text-blue-900">Project Angler Blog</h1>
+        <p>
+          This project resulted in 2 wearable angler fish headbands with glowing
+          orbs, which colours could be controlled from a web app. If you want to
+          know more about how they were created... read on (or just enjoy the
+          photos).
+        </p>
+        <div className="not-prose">
+          <Carousel
+            images={[
+              {
+                src: glowImage,
+                caption: 'First prototype of getting the LED working',
+              },
+              { src: circuitsImage, caption: 'Final circuits' },
+              {
+                src: deskImage,
+                caption: "Ben's desk having not even got that messy yet",
+              },
+              { src: breadboardImage, caption: 'Initial breadboard prototype' },
+              { src: printingImage, caption: 'Prototype 3D printed parts' },
+              {
+                src: benImage,
+                caption: 'Ben testing an almost complete headband',
+              },
+              {
+                src: aiImage,
+                caption: 'AI having just as much fun as us thinking up ideas',
+              },
+              {
+                src: failedCircuitImage,
+                caption: 'A failed attempt to build a circuit on perfboard',
+              },
+              {
+                src: headbandImage,
+                caption: 'Assembly of the headbands',
+              },
+              {
+                src: headband2Image,
+                caption: '#teamwork',
+              },
+            ]}
+          />
+        </div>
+        <h2 className="text-blue-900">🌊 In The Beginning... 🌊</h2>
         <p>
           In a conversation about the summer party about a month ago, Ben told
-          Roo that he didn't like dressing up. Roo loves dressing up and was
-          less than pleased by this. They ended up finding a good middle-ground:
-          a costume that was easy and low-effort to wear, but could take the
-          next month to create. And so, Project Angler was born.
+          Roo that he did not like dressing up. Roo loves dressing up and was
+          less than pleased by this. However, they ended up finding a good
+          middle ground: a costume that would be easy and low-effort to wear,
+          but could take the next month to create. And so, Project Angler was
+          born.
         </p>
-        <p className="mt-3">
+        <p>
           <i>
             Roo had little involvement following this until the last few days,
             but did the most important work of making the headbands and cables
-            look pretty (which is what you all care about right?) and being a
+            look pretty (which is what everyone cares about, right?) and being a
             rubber 🦆
           </i>
         </p>
-        <h1 className="mt-5 text-2xl font-extrabold tracking-tight text-blue-900">
-          🎣 Anglerfish R&D 🎣
-        </h1>
-        <div className="mt-2 ml-4">
-          <h2 className="text-xl font-bold text-cyan-600 ">
-            🏗️ Construction 🏗️
-          </h2>
+        <h2 className="text-blue-900">🎣 Anglerfish R&amp;D 🎣</h2>
+        <h3 className="text-cyan-600 ">🏗️ Construction 🏗️</h3>
+        <p>
+          We spent an evening after work visiting every shop we could think of
+          that might sell headbands or hair clips to hold the Angler wiring
+          above our heads. The thinking was that, with the right base, we could
+          3D print an attachment to stick onto the headband or clips to hold the
+          wires in place. We returned home after our (slightly too expensive, in
+          hindsight) shopping spree, tried on the goods and realised none of
+          them would work. Then we had a genius epiphany that if we were 3D
+          printing something anyway, we might as well print the whole headband.
+        </p>
+        <p>
+          The plan was simple: print a headband with a small attachment to hold
+          some wires that would extend up to an LED shoved into a ping pong
+          ball, as well as another attachment on the side of the headband to
+          hold the battery and all the fancy electronics that Ben knows more
+          about.
           <p>
-            We spent an evening after work going into every shop we thought
-            might sell headbands or hair clips that could hold the Angler wiring
-            above our heads. The thinking was that with the right base, we could
-            3D print an attachment to stick onto the headband or clips and hold
-            the wires. We came home after our (slightly too expensive in
-            hindsight) shopping spree, tried on the goods and realised none of
-            them would work, then had a genius epiphany that if we were 3D
-            printing something anyway we might as well print the whole headband.
-          </p>
-          <p className="mt-3">
-            The plan was simple, print a headband with a small attachment to
-            hold some wires that would go all the way up to an LED shoved into a
-            ping pong ball, as well as another attachment on the side of the
-            headband to hold the battery and all the fancy electronic-y things
-            that Ben knows more about.
             <i>
               (It turns out ping pong balls are really cheap to buy in bulk, so
-              despite many being used in testing we still have tonnes if anyone
-              requires ping pong balls.)
+              despite many being used for testing, we still have tonnes if
+              anyone requires them.)
             </i>
-            We realised that the headbands would quickly get too bulky and heavy
-            on our heads so the new and final design was a headband with wires
-            going out of both sides, one end going towards the ping pong ball
-            and the other down to a box housing all the electronic-y bits that
-            Ben knows more about.
           </p>
-
-          <h2 className="text-xl font-bold text-cyan-600">⚡ Electronics ⚡</h2>
-          <p>
-            The electronics was something that Ben already had a pretty good
-            idea about from all his cocking about at uni. The basic idea was to
-            use an ESP 8266 chip (basically a wifi expansion board that's been
-            adapted to run Arduino code) to control a 4 pin RGB LED, one for
-            red, green, blue and ground. That would all then be powered by a
-            small LiPo battery and all shoved into a case of some sort.
-          </p>
-          <p>
-            13 orders from eBay later and a couple of mistakes ordering the
-            wrong types of components and we had a working prototype. The board
-            was connected to the LED using 3 PNP transistors to make sure they
-            got enough current and could shine their brightest. The battery was
-            connected to the microcontroller via a 3.3v voltage regulator to
-            provide a constant power supply, as well as the raw output being
-            connected to an ADC (analogue to digital converter) input so we
-            could monitor the battery levels.
-          </p>
-          <p>
-            Once we had a prototype on a breadboard, it needed soldering onto
-            protoboard to make a more compact circuit. It took a couple of
-            attempts to get this right and 1 broken microcontroller later we had
-            2 fully soldered board ready to connect to the final headbands.
-          </p>
-          <h2 className="text-xl font-bold text-cyan-600">🧑‍💻 Software 🧑‍💻</h2>
-          <p></p>
-        </div>
+          We realised that the headbands would quickly become too bulky and
+          heavy on our heads, so the final design was a headband with wires
+          extending from both sides: one end going up to the ping pong ball, and
+          the other down to a box housing all the electronic bits that Ben knows
+          more about.
+        </p>
+        <h3 className="text-cyan-600">⚡ Electronics ⚡</h3>
+        <p>
+          The electronics was an area Ben already had a good idea about from his
+          university experience. The basic idea was to use an ESP8266 chip
+          (essentially a WiFi expansion board adapted to run Arduino code) to
+          control a 4-pin RGB LED – one pin for red, green, blue and ground.
+          This would all be powered by a small LiPo battery and packed into a
+          case of some sort.
+        </p>
+        <p>
+          Thirteen orders from eBay later – and a few mistakes ordering the
+          wrong components – we had a working prototype. The board was connected
+          to the LED using three PNP transistors to ensure enough current for
+          maximum brightness. The battery was connected to the microcontroller
+          via a 3.3V voltage regulator to provide a stable power supply, and the
+          raw output was also connected to an ADC (analogue to digital
+          converter) input so we could monitor battery levels.
+        </p>
+        <p>
+          Once we had a prototype on a breadboard, it needed to be soldered onto
+          perfboard to make a more compact circuit. It took a couple of attempts
+          to get this right and, after one broken microcontroller, we had two
+          fully soldered boards ready to be connected to the final headbands.
+        </p>
+        <h3 className="text-cyan-600">🧑‍💻 Software 🧑‍💻</h3>
+        <p>
+          The software was split into three different parts: the Arduino code
+          running on the ESP8266, the web app that allows the user to control
+          the LED, and communication between the two.
+        </p>
+        <h4 className="text-teal-600">Communication</h4>
+        <p>
+          Based on our experience with Kingsway, MQTT was the perfect choice for
+          communication between the headbands and the web app because it is
+          designed for IoT devices that may have spotty connections. We did not
+          want anyone to have to log in for this silly project, so we needed a
+          totally open MQTT broker, which is surprisingly difficult to find
+          among cloud providers. Instead, we found the{' '}
+          <a href="https://www.mqtt-dashboard.com/">Hive MQ Public Broker</a>{' '}
+          which is a free and open broker designed for testing, and fit our
+          needs perfectly.
+        </p>
+        <p>
+          <i>
+            (If anyone wants to play around with MQTT in a work or personal
+            project, this is by far the fastest way to get a prototype up and
+            running – just don’t use any sensitive data!)
+          </i>
+        </p>
+        <h4 className="text-teal-600">Arduino</h4>
+        <p>
+          For the Arduino code, it is 100% vibe coded. We created it by
+          providing Claude Sonnet with vague prompts describing what we wanted
+          it to do. The development process mainly consisted of pasting the
+          entire ~300 lines of code back into OpenWebUI and asking for changes,
+          then repeating for most feature development. The basics, though, are:
+          <ul>
+            <li>
+              On boot, use{' '}
+              <a href="https://github.com/tzapu/WiFiManager">WiFiManager</a> to
+              allow the user to connect the device to a WiFi network
+            </li>
+            <li>
+              Use{' '}
+              <a href="https://github.com/knolleary/pubsubclient">
+                PubSubClient
+              </a>{' '}
+              and <a href="https://arduinojson.org/">ArduinoJson</a> to
+              subscribe to the relevant MQTT topics
+            </li>
+            <li>
+              On receipt of a lighting change message, change the LED colour or
+              pattern configuration and return a status message notifying that
+              the change has been made
+            </li>
+            <li>
+              Periodically read the battery voltage from the ADC input, fetch
+              the current time using{' '}
+              <a href="https://github.com/arduino-libraries/NTPClient">
+                NTPClient
+              </a>{' '}
+              and send a status message
+            </li>
+          </ul>
+        </p>
+        <p>
+          With this basic set of features fleshed out by LLMs, we had a
+          prototype in about an hour, and the final version with a few manual
+          bug fixes within a few hours of development.
+        </p>
+        <h4 className="text-teal-600">Web App</h4>
+        <p>
+          The web app started much the same as the Arduino code – almost
+          entirely vibe coded. However, this approach quickly fell apart as soon
+          as we wanted to make manual changes, since everything generated was in
+          a single file and quite unwieldy. We extracted elements into their own
+          components, then architected it ourselves, using the LLM to fill in
+          methods and generate components based on prior examples. Other than
+          that, it is a fairly standard Vite React application, with the
+          following interesting points:
+          <ul>
+            <li>
+              The template from Vite uses{' '}
+              <a href="https://tanstack.com/router/latest">TanStack Router</a> ,
+              which, with our brief experience, seems very good.
+            </li>
+            <li>
+              <a href="https://github.com/mqttjs">MQTT.js</a> remains a reliable
+              library for MQTT, but it definitely benefits from being wrapped in
+              sensible hooks or contexts to use nicely inside components.
+            </li>
+            <li>
+              <a href="https://www.npmjs.com/package/@uiw/react-color">
+                uiw/react-color
+              </a>{' '}
+              is a very good and configurable colour picker library for all your
+              colour picking needs.
+            </li>
+            <li>
+              While writing this blog (very meta) we used{' '}
+              <a href="https://www.npmjs.com/package/vite-plugin-image-optimizer">
+                Vite Image Optimizer
+              </a>{' '}
+              to compress the images a bit to help with load times
+            </li>
+          </ul>
+        </p>
       </article>
-      <a href="/" className="mt-8 text-blue-600 hover:underline inline-block">
+      <a
+        href="/"
+        className="fixed top-4 left-4 z-50 bg-white/90 px-4 py-2 rounded shadow text-blue-600 hover:underline"
+      >
         ← Back to controller
       </a>
     </div>
