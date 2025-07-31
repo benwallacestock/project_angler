@@ -236,7 +236,7 @@ export const Blog = () => {
       </article>
       <a
         href="/"
-        className="fixed top-4 left-4 z-50 bg-white/90 px-4 py-2 rounded shadow text-blue-600 hover:underline"
+        className="fixed top-4 right-4 z-50 bg-white/90 px-4 py-2 rounded shadow text-blue-600 hover:underline"
       >
         ← Back to controller
       </a>
