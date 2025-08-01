@@ -40,9 +40,9 @@ export const IpBlocker = ({ children }: IpBlockerProps) => {
   if (blocked) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-gradient-to-b from-neutral-100 to-blue-100">
-        <div className="flex flex-col items-center bg-white bg-opacity-80 backdrop-blur rounded-2xl shadow-xl px-8 py-12 max-w-xl">
+        <div className="flex flex-col items-center bg-white bg-opacity-80 backdrop-blur rounded-2xl shadow-xl px-8 py-12 mx-4 max-w-xl">
           <h1 className="text-3xl font-extrabold text-blue-900 mb-4 text-center">
-            Network Restricted
+            🚫 Network Restricted 🚫
           </h1>
           <p className="text-lg text-gray-700 mb-8 text-center">
             You can not access this app from within the Ghyston network,
