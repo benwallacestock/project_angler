@@ -233,6 +233,15 @@ export const Blog = () => {
             </li>
           </ul>
         </p>
+        <p>
+          That was all deployed using{' '}
+          <a href="https://pages.cloudflare.com/">Cloudflare Pages</a> which was
+          genuinely the easiest deployment setup I've ever used. Just link the
+          GitHub repo, tell it your build command (or use presets for Vite) and
+          it'll automatically build and release any pushes to main. All that and
+          its totally free so if anyone needs to deploy a React app for a PD
+          project its an obvious option!
+        </p>
       </article>
       <a
         href="/"
