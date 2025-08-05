@@ -13,7 +13,6 @@ import './styles.css'
 
 import { App } from '@/App.tsx'
 import { Blog } from '@/Blog.tsx'
-import { IpBlocker } from '@/components/IpBlocker.tsx'
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -58,9 +57,7 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <IpBlocker>
-        <RouterProvider router={router} />
-      </IpBlocker>
+      <RouterProvider router={router} />
     </StrictMode>,
   )
 }

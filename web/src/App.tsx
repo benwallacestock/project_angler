@@ -11,6 +11,7 @@ import { ColourControls } from '@/components/controls/ColourControls.tsx'
 import { LightingModeSelect } from '@/components/LightingModeSelect.tsx'
 import { defaultLightingPayloadByMode } from '@/mqtt/lightingPayload.ts'
 import { StrobeControls } from '@/components/controls/StrobeControls.tsx'
+import { IpBlocker } from '@/components/IpBlocker.tsx'
 
 export const App = () => {
   const [deviceState, setDeviceState] = useState<DeviceStateByName>({
@@ -133,7 +134,7 @@ export const App = () => {
   }
 
   return (
-    <>
+    <IpBlocker>
       <div className="flex flex-col min-h-svh max-h-svh w-full bg-gradient-to-b from-neutral-100 to-blue-100 select-none">
         <header className="pt-6 pb-3 px-2 text-center bg-white bg-opacity-70 backdrop-blur-md shadow-md">
           <div className="relative w-full flex items-center justify-center">
@@ -199,6 +200,6 @@ export const App = () => {
           &copy; {new Date().getFullYear()} Ben Wallace-Stock
         </footer>
       </div>
-    </>
+    </IpBlocker>
   )
 }
